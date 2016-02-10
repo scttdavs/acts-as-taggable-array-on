@@ -9,10 +9,10 @@ module ActsAsTaggableArrayOn
         tag_name = tag_def.first
         parser = ActsAsTaggableArrayOn.parser
 
-        scope :"with_any_#{tag_name}", ->(tags){ where("#{tag_name} && ARRAY[?]::varchar[]", parser.parse(tags)) }
-        scope :"with_all_#{tag_name}", ->(tags){ where("#{tag_name} @> ARRAY[?]::varchar[]", parser.parse(tags)) }
-        scope :"without_any_#{tag_name}", ->(tags){ where.not("#{tag_name} && ARRAY[?]::varchar[]", parser.parse(tags)) }
-        scope :"without_all_#{tag_name}", ->(tags){ where.not("#{tag_name} @> ARRAY[?]::varchar[]", parser.parse(tags)) }
+        scope :"with_any_#{tag_name}", ->(tags){ where("#{tag_name} && ARRAY[?]", parser.parse(tags)) }
+        scope :"with_all_#{tag_name}", ->(tags){ where("#{tag_name} @> ARRAY[?]", parser.parse(tags)) }
+        scope :"without_any_#{tag_name}", ->(tags){ where.not("#{tag_name} && ARRAY[?]", parser.parse(tags)) }
+        scope :"without_all_#{tag_name}", ->(tags){ where.not("#{tag_name} @> ARRAY[?]", parser.parse(tags)) }
 
         self.class.class_eval do
           define_method :"all_#{tag_name}" do |options = {}, &block|
