@@ -2,25 +2,29 @@ require 'spec_helper'
 
 describe ActsAsTaggableArrayOn::Taggable do
   before do
-    @user1 = User.create name: 'Tom', colors: ['red', 'blue']
-    @user2 = User.create name: 'Ken', colors: ['black', 'white', 'red']
-    @user3 = User.create name: 'Joe', colors: ['black', 'blue']
+    @user1 = User.create name: 'Tom', colors: ['red', 'blue'], shapes: ['triangle']  
+    @user2 = User.create name: 'Ken', colors: ['black', 'white', 'red'], shapes: ['circle', 'square']  
+    @user3 = User.create name: 'Joe', colors: ['black', 'blue'], shapes: ['circle']    
 
-    User.acts_as_taggable_array_on :colors
+    User.acts_as_taggable_array_on :colors, :shapes
   end
 
   describe "#acts_as_taggable_array_on" do
     it "defines named scope to match any tags" do
       expect(User).to respond_to(:with_any_colors)
+      expect(User).to respond_to(:with_any_shapes)
     end
     it "defines named scope to match all tags" do
       expect(User).to respond_to(:with_all_colors)
+      expect(User).to respond_to(:with_all_shapes)
     end
     it "defines named scope not to match any tags" do
       expect(User).to respond_to(:without_any_colors)
+      expect(User).to respond_to(:without_any_shapes)
     end
     it "defines named scope not to match all tags" do
       expect(User).to respond_to(:without_all_colors)
+      expect(User).to respond_to(:without_all_shapes)
     end
   end
 

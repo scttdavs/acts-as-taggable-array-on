@@ -38,6 +38,7 @@ def create_database
     create_table :users do |t|
       t.string :name
       t.string :colors, array: true, defualt: '{}'
+      t.string :shapes, array: true, defualt: '{}'
       t.timestamps
     end
   end
