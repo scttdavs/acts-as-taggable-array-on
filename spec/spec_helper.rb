@@ -37,8 +37,8 @@ def create_database
   ActiveRecord::Schema.define(:version => 1) do
     create_table :users do |t|
       t.string :name
-      t.string :colors, array: true, defualt: '{}'
-      t.string :shapes, array: true, defualt: '{}'
+      t.text :colors, array: true, defualt: '{}'
+      t.text :shapes, array: true, defualt: '{}'
       t.timestamps
     end
   end
