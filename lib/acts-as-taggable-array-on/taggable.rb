@@ -7,6 +7,7 @@ module ActsAsTaggableArrayOn
     module ClassMethod
       def acts_as_taggable_array_on(*tag_def)
 
+        parser = ActsAsTaggableArrayOn.parser
         tag_def.each do |tag_name|
           parser = ActsAsTaggableArrayOn.parser
           scope :"with_any_#{tag_name}", ->(tags){ where("#{tag_name} && ARRAY[?]", parser.parse(tags)) }
@@ -16,13 +17,11 @@ module ActsAsTaggableArrayOn
 
           self.class.class_eval do
             define_method :"all_#{tag_name}" do |options = {}, &block|
-              subquery_scope = unscoped.select("unnest(#{table_name}.#{tag_name}) as tag").uniq
+              subquery_scope = unscoped.select("unnest(#{table_name}.#{tag_name}) as tag").distinct
               subquery_scope = subquery_scope.instance_eval(&block) if block
 
-        self.class.class_eval do
-          define_method :"all_#{tag_name}" do |options = {}, &block|
-            subquery_scope = unscoped.select("unnest(#{table_name}.#{tag_name}) as tag").distinct
-            subquery_scope = subquery_scope.instance_eval(&block) if block
+              from(subquery_scope).pluck('tag')
+            end
 
             define_method :"#{tag_name}_cloud" do |options = {}, &block|
               subquery_scope = unscoped.select("unnest(#{table_name}.#{tag_name}) as tag")
@@ -32,7 +31,6 @@ module ActsAsTaggableArrayOn
             end
           end
         end
-
       end
     end
   end
